@@ -8,7 +8,7 @@ param(
   [Parameter(Mandatory = $true)][string]$AppUniqueName,
   [ValidateSet('get', 'addtab')][string]$Action = 'get',
   [string]$WebResourceName = 'jmb_/index.html',
-  [string]$Url = '/WebResources/jmb_/index.html',
+  [string]$Url = '$webresource:jmb_/index.html',
   [string]$Title = 'Outlook Scheduler',
   [string]$SubAreaId = 'jmb_outlookscheduler',
   [string]$GroupTitle = 'Productivity',
@@ -51,8 +51,13 @@ if ($Action -eq 'get') {
 # addtab
 $xmlText | Set-Content -Path (Join-Path $PSScriptRoot 'sitemap-backup.xml') -Encoding utf8
 [xml]$d = $xmlText
-if ($d.SelectSingleNode("//SubArea[@Id='$SubAreaId']")) {
-  Write-Host "SubArea $SubAreaId already present; skipping insert."
+$existing = $d.SelectSingleNode("//SubArea[@Id='$SubAreaId']")
+if ($existing) {
+  # Keep the item where it is but make sure its Url/icon match the desired values
+  # ($webresource: form so Customer Service workspace shows the friendly tab title, not the file name).
+  $existing.SetAttribute('Url', $Url)
+  if ($VectorIcon) { $existing.SetAttribute('VectorIcon', $VectorIcon); $existing.SetAttribute('Icon', $VectorIcon) }
+  Write-Host "SubArea $SubAreaId already present; updated Url to $Url"
 }
 else {
   # Build the SubArea element (shared by both placement modes)
