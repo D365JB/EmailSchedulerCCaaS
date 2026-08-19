@@ -1,0 +1,15 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+
+# Node (not required, but safe if tooling is added later)
+node_modules/
+
+# Local scratch / screenshots
+_icons.txt
+shot-*.png
+preview.png
+preview-booking.png

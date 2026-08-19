@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Outlook Scheduler — Preview</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="app-bar">
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 8.5v9.25c0 1.8-1.46 3.25-3.25 3.25H6.25A3.25 3.25 0 0 1 3 17.75V8.5zM7.25 15a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5M12 15a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5m-4.75-4.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5m4.75 0a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5m4.75 0a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5m1-7.5C19.55 3 21 4.46 21 6.25V7H3v-.75C3 4.45 4.46 3 6.25 3z"/></svg></span>
+      <span class="brand-name">Outlook Scheduler</span>
+    </div>
+    <div class="app-bar-right">
+      <span id="who" class="who"></span>
+      <button id="refreshBtn" class="btn ghost icon-only" title="Refresh" aria-label="Refresh"><svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 4.5a7.5 7.5 0 1 0 7.42 6.4c-.07-.46.26-.9.72-.9.37 0 .7.26.76.62q.1.67.1 1.38a9 9 0 1 1-3-6.7V4.24a.75.75 0 0 1 1.5 0v3c0 .41-.34.75-.75.75h-3a.75.75 0 0 1 0-1.5h1.35a7.5 7.5 0 0 0-5.1-2"/></svg></button>
+      <button id="newBtn" class="btn primary"><svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 12a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11m.25-9C19.55 3 21 4.46 21 6.25v5.77q-.7-.45-1.5-.7V8.5h-15v9.25c0 .97.78 1.75 1.75 1.75h5.06q.27.8.71 1.5H6.25A3.25 3.25 0 0 1 3 17.75V6.25C3 4.45 4.46 3 6.25 3zm-.25 11h-.09a.5.5 0 0 0-.4.41l-.01.09V17h-2.59a.5.5 0 0 0-.4.41l-.01.09v.09c.05.2.2.36.41.4l.09.01H17v2.59c.05.2.2.36.41.4l.09.01h.09a.5.5 0 0 0 .4-.41l.01-.09V18h2.59a.5.5 0 0 0 .4-.41l.01-.09v-.09a.5.5 0 0 0-.41-.4L20.5 17H18v-2.59a.5.5 0 0 0-.41-.4zm.25-9.5H6.25c-.97 0-1.75.78-1.75 1.75V7h15v-.75c0-.97-.78-1.75-1.75-1.75"/></svg> New appointment</button>
+    </div>
+  </header>
+
+  <div class="status-bar"><span>Preview &middot; sample data, no sign-in. This mirrors the real app's look and behavior.</span></div>
+
+  <div class="subbar">
+    <div class="subbar-context">
+      <svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5.5 8a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0M8 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8m7.5 5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0M17 6a3 3 0 1 0 0 6 3 3 0 0 0 0-6m-2.75 13.04q1.04.44 2.75.46c2.28 0 3.59-.7 4.3-1.56a3 3 0 0 0 .7-1.73v-.03c0-1.2-.97-2.18-2.18-2.18H14.1q.6.63.81 1.5h4.91a.7.7 0 0 1 .68.7l-.04.18q-.05.25-.32.6C19.8 17.42 18.97 18 17 18c-.98 0-1.67-.15-2.17-.34q-.14.62-.58 1.38M4.25 14C3.01 14 2 15 2 16.25v.28l.01.2q.02.21.1.53c.09.42.29.98.68 1.55C3.61 19.97 5.17 21 8 21s4.39-1.03 5.2-2.2a4.5 4.5 0 0 0 .8-2.27v-.28c0-1.24-1-2.25-2.25-2.25zm-.75 2.5v-.25c0-.41.34-.75.75-.75h7.5c.41 0 .75.34.75.75v.34l-.06.33c-.07.28-.2.65-.46 1.02-.5.71-1.56 1.56-3.98 1.56s-3.49-.85-3.98-1.56a3 3 0 0 1-.52-1.43"/></svg>
+      <span id="ctxLabel">My calendar</span>
+    </div>
+    <form id="viewForm" class="subbar-view" novalidate>
+      <div id="selChips" class="sel-chips"></div>
+      <div class="picker">
+        <button type="button" id="pickerBtn" class="btn ghost sm">Select calendars <svg class="i i-sm" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3.5 6.5 8 11l4.5-4.5z"/></svg></button>
+        <div id="pickerMenu" class="picker-menu hidden">
+          <button type="button" id="pickMine" class="picker-item mine">My calendar</button>
+          <div id="pickerList" class="picker-list"></div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <main class="content">
+    <div id="calendar"></div>
+    <div class="legend">
+      <span class="lg lg-busy">Busy</span>
+      <span class="lg lg-tentative">Tentative</span>
+      <span class="lg lg-free">Free</span>
+      <span class="lg lg-oof">Out of office</span>
+      <span class="lg lg-online"><svg class="i i-sm" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M1 5.5A2.5 2.5 0 0 1 3.5 3h4A2.5 2.5 0 0 1 10 5.5v5A2.5 2.5 0 0 1 7.5 13h-4A2.5 2.5 0 0 1 1 10.5zm12.04 6.28L10.9 10.3l.02-.28V5.98q0-.15-.02-.28l2.14-1.48c.82-.57 1.96.02 1.96 1.03v5.5c0 1-1.14 1.6-1.96 1.03"/></svg> Teams meeting</span>
+    </div>
+  </main>
+
+  <div id="bookingModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="bmTitle">
+    <div class="modal-card">
+      <h2 id="bmTitle">New appointment</h2>
+      <form id="bookingForm" novalidate>
+        <label class="field">Subject
+          <input id="bmSubject" type="text" maxlength="255" required autocomplete="off">
+        </label>
+        <div class="row">
+          <label class="field">Start <input id="bmStart" type="datetime-local" required></label>
+          <label class="field">End <input id="bmEnd" type="datetime-local" required></label>
+        </div>
+        <label class="field">Attendee email
+          <input id="bmAttendee" type="email" placeholder="customer@contoso.com" autocomplete="off">
+        </label>
+        <label class="field">Location <input id="bmLocation" type="text" maxlength="255" autocomplete="off"></label>
+        <label class="field">Notes <textarea id="bmNotes" rows="3"></textarea></label>
+        <label class="check"><input id="bmTeams" type="checkbox" checked> Add Microsoft Teams meeting</label>
+        <div class="modal-actions">
+          <button type="button" id="bmCancel" class="btn ghost">Cancel</button>
+          <button type="submit" id="bmSave" class="btn primary">Create appointment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="detailsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="dmTitle">
+    <div class="modal-card">
+      <h2 id="dmTitle">Appointment</h2>
+      <dl id="dmBody" class="details"></dl>
+      <div class="modal-actions"><button type="button" id="dmClose" class="btn primary">Close</button></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+  <script>
+    // Standalone visual preview: mocks the calendar + booking so the UI can be seen without sign-in.
+    (function () {
+      var cal, els = {};
+      var TEAMS = 'https://teams.microsoft.com/l/meetup-join/preview';
+      var selected = [];
+      var PALETTE = ['#2f5bea', '#c4314b', '#3a9b78', '#8764b8', '#b8860b', '#0f766e'];
+      var ROSTER = [
+        { name: 'Sara Nguyen', email: 'sara.nguyen@contoso.com' },
+        { name: 'Diego Ramirez', email: 'diego.ramirez@contoso.com' },
+        { name: 'Priya Patel', email: 'priya.patel@contoso.com' },
+        { name: 'Tom Becker', email: 'tom.becker@contoso.com' },
+        { name: 'Amina Hassan', email: 'amina.hassan@contoso.com' },
+        { name: 'Liam O\u2019Brien', email: 'liam.obrien@contoso.com' }
+      ];
+      var SVG_VIDEO = '<svg class="i i-sm" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M1 5.5A2.5 2.5 0 0 1 3.5 3h4A2.5 2.5 0 0 1 10 5.5v5A2.5 2.5 0 0 1 7.5 13h-4A2.5 2.5 0 0 1 1 10.5zm12.04 6.28L10.9 10.3l.02-.28V5.98q0-.15-.02-.28l2.14-1.48c.82-.57 1.96.02 1.96 1.03v5.5c0 1-1.14 1.6-1.96 1.03"/></svg>';
+
+      function $(id) { return document.getElementById(id); }
+      function show(el) { el.classList.remove('hidden'); }
+      function hide(el) { el.classList.add('hidden'); }
+
+      function monday(offsetDays, h, m) {
+        var now = new Date(), day = now.getDay();
+        var delta = (day === 0 ? -6 : 1 - day);
+        var mon = new Date(now.getFullYear(), now.getMonth(), now.getDate() + delta);
+        return new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + offsetDays, h, m);
+      }
+
+      function mockEvents() {
+        return [
+          { title: 'Daily stand-up', start: monday(0, 9, 0), end: monday(0, 9, 30), extendedProps: { showAs: 'busy', online: true, joinUrl: TEAMS, organizer: 'Team' } },
+          { title: 'Customer call \u2013 Contoso', start: monday(0, 11, 0), end: monday(0, 12, 0), extendedProps: { showAs: 'busy', online: true, joinUrl: TEAMS, location: 'Microsoft Teams Meeting', organizer: 'Jordan Rivera' } },
+          { title: 'Case review', start: monday(0, 14, 0), end: monday(0, 15, 0), extendedProps: { showAs: 'tentative' } },
+          { title: '1:1 with manager', start: monday(1, 10, 0), end: monday(1, 10, 30), extendedProps: { showAs: 'busy', online: true, joinUrl: TEAMS } },
+          { title: 'Focus / follow-ups', start: monday(1, 13, 0), end: monday(1, 14, 30), extendedProps: { showAs: 'free' } },
+          { title: 'Out of office \u2013 training', start: monday(2, 0, 0), end: monday(3, 0, 0), allDay: true, extendedProps: { showAs: 'oof' } },
+          { title: 'Callback \u2013 Fabrikam', start: monday(3, 9, 30), end: monday(3, 10, 0), extendedProps: { showAs: 'busy', online: true, joinUrl: TEAMS, location: 'Microsoft Teams Meeting' } },
+          { title: 'Team sync', start: monday(3, 15, 0), end: monday(3, 16, 0), extendedProps: { showAs: 'busy', online: true, joinUrl: TEAMS } },
+          { title: 'Renewal review \u2013 Northwind', start: monday(4, 11, 0), end: monday(4, 11, 45), extendedProps: { showAs: 'busy', online: true, joinUrl: TEAMS } },
+          { title: 'Lunch', start: monday(4, 12, 0), end: monday(4, 13, 0), extendedProps: { showAs: 'free' } }
+        ];
+      }
+
+      function label(s) { return ({ busy: 'Busy', tentative: 'Tentative', oof: 'Out of office', workingElsewhere: 'Working elsewhere', free: 'Free' })[s] || 'Busy'; }
+      function memberIndex(email) { for (var i = 0; i < ROSTER.length; i++) { if (ROSTER[i].email === email) return i; } return 0; }
+      function mockScheduleFor(i) {
+        var out = [];
+        for (var d = 0; d < 5; d++) {
+          var sh = 9 + ((i + d) % 6);
+          out.push({ day: d, sh: sh, eh: sh + 1, st: (d === 2 && i % 2 ? 'tentative' : 'busy') });
+        }
+        if (i % 3 === 0) out.push({ day: 2, allDay: true, st: 'oof' });
+        return out;
+      }
+      function feed(info, success) {
+        if (!selected.length) { success(mockEvents()); return; }
+        var out = [];
+        selected.forEach(function (email) {
+          var i = memberIndex(email), m = ROSTER[i], color = PALETTE[i % PALETTE.length];
+          mockScheduleFor(i).forEach(function (b) {
+            out.push({
+              title: m.name + (b.st !== 'busy' ? ' \u00b7 ' + label(b.st) : ''),
+              start: b.allDay ? monday(b.day, 0, 0) : monday(b.day, b.sh, 0),
+              end: b.allDay ? monday(b.day + 1, 0, 0) : monday(b.day, b.eh, 0),
+              allDay: !!b.allDay,
+              backgroundColor: color, borderColor: color, textColor: '#fff',
+              extendedProps: { showAs: b.st, person: m.name, availabilityOnly: true }
+            });
+          });
+        });
+        success(out);
+      }
+
+      function buildPicker() {
+        var list = $('pickerList'); list.textContent = '';
+        ROSTER.forEach(function (m, i) {
+          var row = document.createElement('label'); row.className = 'picker-row';
+          var cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = m.email;
+          cb.addEventListener('change', onMemberToggle);
+          var dot = document.createElement('span'); dot.className = 'dot'; dot.style.background = PALETTE[i % PALETTE.length];
+          var txt = document.createElement('span'); txt.className = 'pr-text';
+          var nm = document.createElement('span'); nm.className = 'pr-name'; nm.textContent = m.name;
+          var em = document.createElement('span'); em.className = 'pr-email'; em.textContent = m.email;
+          txt.appendChild(nm); txt.appendChild(em);
+          row.appendChild(cb); row.appendChild(dot); row.appendChild(txt);
+          list.appendChild(row);
+        });
+      }
+      function onMemberToggle(e) {
+        var email = e.target.value;
+        if (e.target.checked) { if (selected.indexOf(email) < 0) selected.push(email); }
+        else { selected = selected.filter(function (x) { return x !== email; }); }
+        renderChips(); updateCtx(); cal.refetchEvents();
+      }
+      function selectMine() {
+        selected = [];
+        Array.prototype.forEach.call($('pickerList').querySelectorAll('input[type=checkbox]'), function (cb) { cb.checked = false; });
+        $('pickerMenu').classList.add('hidden');
+        renderChips(); updateCtx(); cal.refetchEvents();
+      }
+      function removeSelected(email) {
+        selected = selected.filter(function (x) { return x !== email; });
+        var cb = $('pickerList').querySelector('input[value="' + email + '"]'); if (cb) cb.checked = false;
+        renderChips(); updateCtx(); cal.refetchEvents();
+      }
+      function renderChips() {
+        var wrap = $('selChips'); wrap.textContent = '';
+        selected.forEach(function (email) {
+          var i = memberIndex(email), m = ROSTER[i];
+          var chip = document.createElement('span'); chip.className = 'chip';
+          var dot = document.createElement('span'); dot.className = 'dot'; dot.style.background = PALETTE[i % PALETTE.length];
+          var nm = document.createElement('span'); nm.textContent = m.name;
+          var x = document.createElement('button'); x.type = 'button'; x.textContent = '\u00d7'; x.title = 'Remove';
+          x.addEventListener('click', function () { removeSelected(email); });
+          chip.appendChild(dot); chip.appendChild(nm); chip.appendChild(x);
+          wrap.appendChild(chip);
+        });
+      }
+      function updateCtx() {
+        if (!selected.length) $('ctxLabel').textContent = 'My calendar';
+        else if (selected.length === 1) $('ctxLabel').textContent = 'Viewing: ' + ROSTER[memberIndex(selected[0])].name;
+        else $('ctxLabel').textContent = 'Viewing ' + selected.length + ' calendars';
+      }
+
+      function pad(n) { return String(n).padStart(2, '0'); }
+      function toLocalInput(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+      function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+
+      function formatRange(start, end, allDay) {
+        var oD = { weekday: 'short', month: 'short', day: 'numeric' }, oT = { hour: 'numeric', minute: '2-digit' };
+        if (allDay) return start.toLocaleDateString([], oD) + ' (all day)';
+        var same = start.toDateString() === end.toDateString();
+        return start.toLocaleDateString([], oD) + ' ' + start.toLocaleTimeString([], oT) + ' \u2013 ' +
+          (same ? end.toLocaleTimeString([], oT) : end.toLocaleDateString([], oD) + ' ' + end.toLocaleTimeString([], oT));
+      }
+
+      function openBooking(start, end) {
+        $('bookingForm').reset(); $('bmTeams').checked = true;
+        $('bmStart').value = toLocalInput(start);
+        $('bmEnd').value = toLocalInput(end || new Date(start.getTime() + 30 * 60000));
+        show($('bookingModal')); setTimeout(function () { $('bmSubject').focus(); }, 30);
+      }
+
+      function onEventClick(arg) {
+        var e = arg.event, p = e.extendedProps, dl = $('dmBody');
+        $('dmTitle').textContent = e.title; dl.textContent = '';
+        add(dl, 'When', formatRange(e.start, e.end, e.allDay));
+        add(dl, 'Status', cap(p.showAs || 'busy'));
+        if (p.location) add(dl, 'Location', p.location);
+        if (p.organizer) add(dl, 'Organizer', p.organizer);
+        if (p.joinUrl) { var dt = document.createElement('dt'); dt.textContent = 'Teams'; var dd = document.createElement('dd'); var a = document.createElement('a'); a.href = p.joinUrl; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Join Teams meeting'; dd.appendChild(a); dl.appendChild(dt); dl.appendChild(dd); }
+        show($('detailsModal'));
+      }
+      function add(dl, k, v) { var dt = document.createElement('dt'); dt.textContent = k; var dd = document.createElement('dd'); dd.textContent = v; dl.appendChild(dt); dl.appendChild(dd); }
+
+      function toast(text, link) {
+        var t = $('toast'); t.textContent = ''; var s = document.createElement('span'); s.textContent = text; t.appendChild(s);
+        if (link) { var a = document.createElement('a'); a.href = link; a.target = '_blank'; a.rel = 'noopener'; a.className = 'toast-link'; a.textContent = 'Open Teams meeting'; t.appendChild(a); }
+        show(t); requestAnimationFrame(function () { t.classList.add('shown'); });
+        clearTimeout(t._timer); t._timer = setTimeout(function () { t.classList.remove('shown'); setTimeout(function () { hide(t); }, 300); }, 8000);
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        $('who').textContent = 'Jordan Rivera';
+        cal = new FullCalendar.Calendar($('calendar'), {
+          initialView: 'timeGridWeek', height: '100%', nowIndicator: true, firstDay: 1,
+          slotMinTime: '07:00:00', slotMaxTime: '20:00:00', scrollTime: '08:00:00',
+          allDaySlot: true, expandRows: true, stickyHeaderDates: true,
+          headerToolbar: { left: 'prev,next today', center: 'title', right: 'timeGridDay,timeGridWeek,dayGridMonth' },
+          businessHours: { daysOfWeek: [1, 2, 3, 4, 5], startTime: '08:00', endTime: '18:00' },
+          selectable: true, selectMirror: true,
+          select: function (info) { openBooking(info.start, info.end); cal.unselect(); },
+          eventClick: onEventClick,
+          events: feed,
+          eventDidMount: function (arg) { var ep = arg.event.extendedProps; if (!ep.availabilityOnly) arg.el.classList.add('show-' + (ep.showAs || 'busy')); if (ep.showAs === 'tentative') arg.el.classList.add('striped'); if (ep.online) { arg.el.classList.add('is-online'); var t = arg.el.querySelector('.fc-event-title'); if (t && !t.querySelector('.i')) t.insertAdjacentHTML('afterbegin', SVG_VIDEO + ' '); } }
+        });
+        cal.render();
+
+        $('newBtn').addEventListener('click', function () { var s = new Date(); s.setSeconds(0, 0); s.setMinutes(s.getMinutes() < 30 ? 30 : 60); openBooking(s, new Date(s.getTime() + 30 * 60000)); });
+        $('refreshBtn').addEventListener('click', function () { cal.refetchEvents(); });
+        $('bmCancel').addEventListener('click', function () { hide($('bookingModal')); });
+        $('dmClose').addEventListener('click', function () { hide($('detailsModal')); });
+        [$('bookingModal'), $('detailsModal')].forEach(function (m) { m.addEventListener('click', function (e) { if (e.target === m) hide(m); }); });
+        window.addEventListener('keydown', function (e) { if (e.key === 'Escape') { hide($('bookingModal')); hide($('detailsModal')); } });
+
+        buildPicker();
+        $('pickerBtn').addEventListener('click', function (e) { e.stopPropagation(); $('pickerMenu').classList.toggle('hidden'); });
+        $('pickMine').addEventListener('click', selectMine);
+        document.addEventListener('click', function (e) { if (!e.target.closest('.picker')) $('pickerMenu').classList.add('hidden'); });
+
+        $('bookingForm').addEventListener('submit', function (ev) {
+          ev.preventDefault();
+          var teams = $('bmTeams').checked;
+          cal.addEvent({ title: $('bmSubject').value || '(No subject)', start: new Date($('bmStart').value), end: new Date($('bmEnd').value), extendedProps: { showAs: 'busy', online: teams, joinUrl: teams ? TEAMS : null } });
+          hide($('bookingModal'));
+          toast('Appointment created' + (teams ? ' with a Teams meeting.' : '.') + ' (Preview \u2014 nothing was written to Outlook)', teams ? TEAMS : null);
+        });
+
+        // Demo hooks for screenshots: ?demo=book opens the dialog, ?demo=view shows the manager view.
+        var demo = new URLSearchParams(location.search).get('demo');
+        if (demo === 'book') {
+          openBooking(monday(3, 14, 0), monday(3, 14, 30));
+          $('bmSubject').value = 'Follow-up call \u2013 Contoso renewal';
+          $('bmAttendee').value = 'sara.nguyen@contoso.com';
+          $('bmNotes').value = 'Walk through the renewal quote and answer billing questions.';
+        }
+        if (demo === 'view') {
+          ['sara.nguyen@contoso.com', 'diego.ramirez@contoso.com'].forEach(function (email) {
+            selected.push(email);
+            var cb = $('pickerList').querySelector('input[value="' + email + '"]');
+            if (cb) cb.checked = true;
+          });
+          renderChips(); updateCtx(); cal.refetchEvents();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

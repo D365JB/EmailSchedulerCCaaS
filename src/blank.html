@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Signing in</title>
+  <style>body { font-family: 'Segoe UI', Arial, sans-serif; color: #555; padding: 16px; }</style>
+  <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@2.38.4/lib/msal-browser.min.js"></script>
+  <script src="./config.js"></script>
+  <script>
+    // MSAL popup/redirect landing page. Completes the auth handshake and returns to the opener.
+    (function () {
+      try {
+        var app = new msal.PublicClientApplication({
+          auth: {
+            clientId: window.OSA_CONFIG.clientId,
+            authority: 'https://login.microsoftonline.com/' + window.OSA_CONFIG.tenantId,
+            redirectUri: location.origin + location.pathname
+          },
+          cache: { cacheLocation: 'sessionStorage' }
+        });
+        app.handleRedirectPromise().catch(function (e) { console.error(e); });
+      } catch (e) { console.error(e); }
+    })();
+  </script>
+</head>
+<body>Signing you in</body>
+</html>

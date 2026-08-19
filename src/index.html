@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Outlook Scheduler</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="app-bar">
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 8.5v9.25c0 1.8-1.46 3.25-3.25 3.25H6.25A3.25 3.25 0 0 1 3 17.75V8.5zM7.25 15a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5M12 15a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5m-4.75-4.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5m4.75 0a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5m4.75 0a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5m1-7.5C19.55 3 21 4.46 21 6.25V7H3v-.75C3 4.45 4.46 3 6.25 3z"/></svg></span>
+      <span class="brand-name">Outlook Scheduler</span>
+    </div>
+    <div class="app-bar-right">
+      <span id="who" class="who"></span>
+      <button id="signInBtn" class="btn primary hidden">Sign in</button>
+      <button id="refreshBtn" class="btn ghost icon-only" title="Refresh" aria-label="Refresh"><svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 4.5a7.5 7.5 0 1 0 7.42 6.4c-.07-.46.26-.9.72-.9.37 0 .7.26.76.62q.1.67.1 1.38a9 9 0 1 1-3-6.7V4.24a.75.75 0 0 1 1.5 0v3c0 .41-.34.75-.75.75h-3a.75.75 0 0 1 0-1.5h1.35a7.5 7.5 0 0 0-5.1-2"/></svg></button>
+      <button id="newBtn" class="btn primary"><svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 12a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11m.25-9C19.55 3 21 4.46 21 6.25v5.77q-.7-.45-1.5-.7V8.5h-15v9.25c0 .97.78 1.75 1.75 1.75h5.06q.27.8.71 1.5H6.25A3.25 3.25 0 0 1 3 17.75V6.25C3 4.45 4.46 3 6.25 3zm-.25 11h-.09a.5.5 0 0 0-.4.41l-.01.09V17h-2.59a.5.5 0 0 0-.4.41l-.01.09v.09c.05.2.2.36.41.4l.09.01H17v2.59c.05.2.2.36.41.4l.09.01h.09a.5.5 0 0 0 .4-.41l.01-.09V18h2.59a.5.5 0 0 0 .4-.41l.01-.09v-.09a.5.5 0 0 0-.41-.4L20.5 17H18v-2.59a.5.5 0 0 0-.41-.4zm.25-9.5H6.25c-.97 0-1.75.78-1.75 1.75V7h15v-.75c0-.97-.78-1.75-1.75-1.75"/></svg> New appointment</button>
+    </div>
+  </header>
+
+  <div id="statusBar" class="status-bar hidden"><span id="statusText"></span></div>
+
+  <div id="subbar" class="subbar">
+    <div class="subbar-context">
+      <svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5.5 8a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0M8 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8m7.5 5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0M17 6a3 3 0 1 0 0 6 3 3 0 0 0 0-6m-2.75 13.04q1.04.44 2.75.46c2.28 0 3.59-.7 4.3-1.56a3 3 0 0 0 .7-1.73v-.03c0-1.2-.97-2.18-2.18-2.18H14.1q.6.63.81 1.5h4.91a.7.7 0 0 1 .68.7l-.04.18q-.05.25-.32.6C19.8 17.42 18.97 18 17 18c-.98 0-1.67-.15-2.17-.34q-.14.62-.58 1.38M4.25 14C3.01 14 2 15 2 16.25v.28l.01.2q.02.21.1.53c.09.42.29.98.68 1.55C3.61 19.97 5.17 21 8 21s4.39-1.03 5.2-2.2a4.5 4.5 0 0 0 .8-2.27v-.28c0-1.24-1-2.25-2.25-2.25zm-.75 2.5v-.25c0-.41.34-.75.75-.75h7.5c.41 0 .75.34.75.75v.34l-.06.33c-.07.28-.2.65-.46 1.02-.5.71-1.56 1.56-3.98 1.56s-3.49-.85-3.98-1.56a3 3 0 0 1-.52-1.43"/></svg>
+      <span id="ctxLabel">My calendar</span>
+    </div>
+    <form id="viewForm" class="subbar-view" novalidate>
+      <div id="selChips" class="sel-chips"></div>
+      <div class="picker">
+        <button type="button" id="pickerBtn" class="btn ghost sm">Select calendars <svg class="i i-sm" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3.5 6.5 8 11l4.5-4.5z"/></svg></button>
+        <div id="pickerMenu" class="picker-menu hidden">
+          <button type="button" id="pickMine" class="picker-item mine">My calendar</button>
+          <div id="pickerList" class="picker-list"></div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <main class="content">
+    <div id="calendar"></div>
+    <div class="legend">
+      <span class="lg lg-busy">Busy</span>
+      <span class="lg lg-tentative">Tentative</span>
+      <span class="lg lg-free">Free</span>
+      <span class="lg lg-oof">Out of office</span>
+      <span class="lg lg-online"><svg class="i i-sm" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M1 5.5A2.5 2.5 0 0 1 3.5 3h4A2.5 2.5 0 0 1 10 5.5v5A2.5 2.5 0 0 1 7.5 13h-4A2.5 2.5 0 0 1 1 10.5zm12.04 6.28L10.9 10.3l.02-.28V5.98q0-.15-.02-.28l2.14-1.48c.82-.57 1.96.02 1.96 1.03v5.5c0 1-1.14 1.6-1.96 1.03"/></svg> Teams meeting</span>
+    </div>
+  </main>
+
+  <!-- New appointment -->
+  <div id="bookingModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="bmTitle">
+    <div class="modal-card">
+      <h2 id="bmTitle">New appointment</h2>
+      <form id="bookingForm" novalidate>
+        <label class="field">Subject
+          <input id="bmSubject" type="text" maxlength="255" required autocomplete="off">
+        </label>
+        <div class="row">
+          <label class="field">Start
+            <input id="bmStart" type="datetime-local" required>
+          </label>
+          <label class="field">End
+            <input id="bmEnd" type="datetime-local" required>
+          </label>
+        </div>
+        <label class="field">Attendee email
+          <input id="bmAttendee" type="email" placeholder="customer@contoso.com" autocomplete="off">
+        </label>
+        <label class="field">Location
+          <input id="bmLocation" type="text" maxlength="255" autocomplete="off">
+        </label>
+        <label class="field">Notes
+          <textarea id="bmNotes" rows="3"></textarea>
+        </label>
+        <label class="check">
+          <input id="bmTeams" type="checkbox" checked> Add Microsoft Teams meeting
+        </label>
+        <div id="bmError" class="form-error hidden" role="alert"></div>
+        <div class="modal-actions">
+          <button type="button" id="bmCancel" class="btn ghost">Cancel</button>
+          <button type="submit" id="bmSave" class="btn primary">Create appointment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Appointment details -->
+  <div id="detailsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="dmTitle">
+    <div class="modal-card">
+      <h2 id="dmTitle">Appointment</h2>
+      <dl id="dmBody" class="details"></dl>
+      <div class="modal-actions">
+        <button type="button" id="dmClose" class="btn primary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@2.38.4/lib/msal-browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+  <script src="./config.js"></script>
+  <script src="./auth.js"></script>
+  <script src="./graph.js"></script>
+  <script src="./dataverse.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
