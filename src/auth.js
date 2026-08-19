@@ -10,7 +10,18 @@ function isConfigured() {
 
 function computeRedirectUri() {
   if (CONFIG.redirectUri) return CONFIG.redirectUri;
-  var dir = location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1);
+  // Dynamics serves web resources through a cache-versioned path like
+  // /{638...}/webresources/jmb_/index.html. That {token} changes on every publish and
+  // can't be pre-registered in Entra, so rebuild a stable canonical URI that matches the
+  // registered redirect (…/WebResources/<prefix>/blank.html), preserving that exact casing.
+  var p = location.pathname;
+  var idx = p.toLowerCase().indexOf('/webresources/');
+  if (idx !== -1) {
+    var after = p.substring(idx + '/webresources/'.length); // e.g. jmb_/index.html
+    var folder = after.substring(0, after.lastIndexOf('/') + 1); // e.g. jmb_/
+    return location.origin + '/WebResources/' + folder + 'blank.html';
+  }
+  var dir = p.substring(0, p.lastIndexOf('/') + 1);
   return location.origin + dir + 'blank.html';
 }
 

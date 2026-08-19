@@ -11,7 +11,9 @@ param(
   [string]$Url = '/WebResources/jmb_/index.html',
   [string]$Title = 'Outlook Scheduler',
   [string]$SubAreaId = 'jmb_outlookscheduler',
-  [string]$GroupTitle = 'Productivity'
+  [string]$GroupTitle = 'Productivity',
+  [string]$AfterTitle = '',
+  [string]$VectorIcon = ''
 )
 $ErrorActionPreference = 'Stop'
 $OrgUrl = $OrgUrl.TrimEnd('/'); $api = "$OrgUrl/api/data/v9.2"
@@ -53,15 +55,30 @@ if ($d.SelectSingleNode("//SubArea[@Id='$SubAreaId']")) {
   Write-Host "SubArea $SubAreaId already present; skipping insert."
 }
 else {
-  $area = @($d.SiteMap.Area)[0]
-  if (-not $area) { throw "No Area in sitemap" }
-  $grp = $d.CreateElement('Group'); $grp.SetAttribute('Id', 'jmb_group')
-  $gt = $d.CreateElement('Titles'); $gtt = $d.CreateElement('Title'); $gtt.SetAttribute('LCID', '1033'); $gtt.SetAttribute('Title', $GroupTitle); $gt.AppendChild($gtt) | Out-Null; $grp.AppendChild($gt) | Out-Null
-  $sa = $d.CreateElement('SubArea'); $sa.SetAttribute('Id', $SubAreaId); $sa.SetAttribute('Icon', '/_imgs/imagestrips/transparent_spacer.gif'); $sa.SetAttribute('Url', $Url); $sa.SetAttribute('Client', 'All,Outlook,OutlookLaptopClient,OutlookWorkstationClient,Web'); $sa.SetAttribute('AvailableOffline', 'false'); $sa.SetAttribute('PassParams', 'false')
+  # Build the SubArea element (shared by both placement modes)
+  $sa = $d.CreateElement('SubArea'); $sa.SetAttribute('Id', $SubAreaId)
+  if ($VectorIcon) { $sa.SetAttribute('VectorIcon', $VectorIcon); $sa.SetAttribute('Icon', $VectorIcon) }
+  else { $sa.SetAttribute('Icon', '/_imgs/imagestrips/transparent_spacer.gif') }
+  $sa.SetAttribute('Url', $Url); $sa.SetAttribute('Client', 'All,Outlook,OutlookLaptopClient,OutlookWorkstationClient,Web'); $sa.SetAttribute('AvailableOffline', 'false'); $sa.SetAttribute('PassParams', 'false')
   $stt2 = $d.CreateElement('Titles'); $t2 = $d.CreateElement('Title'); $t2.SetAttribute('LCID', '1033'); $t2.SetAttribute('Title', $Title); $stt2.AppendChild($t2) | Out-Null; $sa.AppendChild($stt2) | Out-Null
-  $grp.AppendChild($sa) | Out-Null
-  $area.AppendChild($grp) | Out-Null
-  Write-Host "Inserted SubArea $SubAreaId into Area $($area.Id)"
+
+  if ($AfterTitle) {
+    # Insert right after an existing SubArea (matched by its 1033 title), in the same Group
+    $anchor = $d.SelectSingleNode("//SubArea[Titles/Title[@LCID='1033' and @Title='$AfterTitle']]")
+    if (-not $anchor) { throw "Anchor SubArea titled '$AfterTitle' not found" }
+    $parent = $anchor.ParentNode
+    $parent.InsertAfter($sa, $anchor) | Out-Null
+    Write-Host "Inserted SubArea $SubAreaId after '$AfterTitle' in Group $($parent.Id)"
+  }
+  else {
+    $area = @($d.SiteMap.Area)[0]
+    if (-not $area) { throw "No Area in sitemap" }
+    $grp = $d.CreateElement('Group'); $grp.SetAttribute('Id', 'jmb_group')
+    $gt = $d.CreateElement('Titles'); $gtt = $d.CreateElement('Title'); $gtt.SetAttribute('LCID', '1033'); $gtt.SetAttribute('Title', $GroupTitle); $gt.AppendChild($gtt) | Out-Null; $grp.AppendChild($gt) | Out-Null
+    $grp.AppendChild($sa) | Out-Null
+    $area.AppendChild($grp) | Out-Null
+    Write-Host "Inserted SubArea $SubAreaId into new Group in Area $($area.Id)"
+  }
 }
 $newXml = $d.OuterXml
 

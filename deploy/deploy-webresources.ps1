@@ -41,6 +41,10 @@ $H = @{
 $srcDir = Join-Path (Split-Path $PSScriptRoot -Parent) 'src'
 $typeMap = @{ '.html' = 1; '.htm' = 1; '.css' = 2; '.js' = 3; '.xml' = 4; '.png' = 5; '.jpg' = 6; '.gif' = 7; '.ico' = 10; '.svg' = 11; '.json' = 3 }
 
+# Friendly display names. In Customer Service workspace the web-resource tab caption comes from
+# the web resource DisplayName, so index.html must not show as "index.html".
+$displayNameMap = @{ 'index.html' = 'Outlook Scheduler' }
+
 $script:ids = @()
 
 Get-ChildItem $srcDir -File | ForEach-Object {
@@ -48,8 +52,9 @@ Get-ChildItem $srcDir -File | ForEach-Object {
   if (-not $typeMap.ContainsKey($ext)) { return }
 
   $name = "$Prefix" + '_/' + $_.Name
+  $display = if ($displayNameMap.ContainsKey($_.Name)) { $displayNameMap[$_.Name] } else { $_.Name }
   $b64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes($_.FullName))
-  $payload = @{ name = $name; displayname = $_.Name; webresourcetype = $typeMap[$ext]; content = $b64 } | ConvertTo-Json -Compress
+  $payload = @{ name = $name; displayname = $display; webresourcetype = $typeMap[$ext]; content = $b64 } | ConvertTo-Json -Compress
 
   $filter = "name eq '$name'"
   $getUri = "$api/webresourceset?`$select=webresourceid&`$filter=" + [uri]::EscapeDataString($filter)
