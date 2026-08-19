@@ -117,7 +117,6 @@ body {
 .subbar-context .i { color: var(--brand); }
 #ctxLabel { color: var(--ink); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .subbar-view { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
-.subbar-view input { font: inherit; font-size: 13px; color: var(--ink); padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; min-width: 260px; }
 .subbar-view input:focus { outline: 2px solid var(--brand); border-color: var(--brand); }
 .details a { display: inline-flex; align-items: center; gap: 4px; }
 
@@ -128,12 +127,12 @@ body {
 .picker-item { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; background: transparent; border: none; border-radius: 6px; padding: 8px 10px; font: inherit; font-size: 13px; cursor: pointer; color: var(--ink); }
 .picker-item.mine { border-bottom: 1px solid var(--line); border-radius: 0; margin-bottom: 4px; font-weight: 600; }
 .picker-item:hover { background: #f3f2f1; }
-.picker-list { max-height: 244px; overflow: auto; }
-.picker-row { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px; cursor: pointer; }
+.picker-list { max-height: 300px; overflow-x: hidden; overflow-y: auto; }
+.picker-row { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px; cursor: pointer; min-width: 0; }
 .picker-row:hover { background: #f3f2f1; }
 .picker-row input { margin: 0; flex: none; }
-.pr-text { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
-.pr-name { font-size: 13px; }
+.pr-text { display: flex; flex-direction: column; line-height: 1.2; flex: 1 1 auto; min-width: 0; overflow: hidden; }
+.pr-name { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pr-email { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
 .sel-chips { display: flex; flex-wrap: wrap; gap: 6px; }
