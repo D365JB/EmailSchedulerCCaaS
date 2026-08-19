@@ -13,3 +13,10 @@ _icons.txt
 shot-*.png
 preview.png
 preview-booking.png
+
+# Deploy scratch / backups (env-specific)
+reg.out.txt
+jmb_apps.txt
+subarea-samples.txt
+deploy/sitemap-current.xml
+deploy/sitemap-backup.xml

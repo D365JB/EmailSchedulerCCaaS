@@ -61,7 +61,7 @@ Get-ChildItem $srcDir -File | ForEach-Object {
     Write-Host "Updated  $name"
   }
   else {
-    $resp = Invoke-WebRequest -Method Post -Headers $H -Uri "$api/webresourceset" -Body $payload
+    $resp = Invoke-WebRequest -Method Post -Headers $H -Uri "$api/webresourceset" -Body $payload -UseBasicParsing
     $loc = $resp.Headers['OData-EntityId']; if ($loc -is [array]) { $loc = $loc[0] }
     $id = [regex]::Match($loc, '\(([0-9a-fA-F-]{36})\)').Groups[1].Value
     Write-Host "Created  $name"

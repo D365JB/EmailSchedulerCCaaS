@@ -1,8 +1,8 @@
 // Outlook Scheduler configuration.
 // Fill in clientId and tenantId after running deploy/register-app.ps1 (it prints both).
 window.OSA_CONFIG = {
-  clientId: 'REPLACE_WITH_APP_CLIENT_ID',
-  tenantId: 'REPLACE_WITH_TENANT_ID',
+  clientId: '6e91bb81-2ef3-4af0-8a27-a85d392dbed3',
+  tenantId: '769d2378-c654-4f20-ad01-3f0192c35475',
 
   // Leave null to auto-detect "<this folder>/blank.html" as the MSAL redirect URI.
   // Set explicitly only if you host blank.html somewhere else.
