@@ -123,7 +123,9 @@
   async function fetchEvents(info, success, failure) {
     try {
       if (selected.length) {
-        var sched = await getSchedule(selected, info.start, info.end);
+        var sched = CONFIG.demoAvailability
+          ? selected.map(function (email) { return mockScheduleFor(email, info.start, info.end); })
+          : await getSchedule(selected, info.start, info.end);
         var out = [];
         sched.forEach(function (s, i) {
           var m = memberFor(selected[i]);
@@ -232,6 +234,57 @@
   }
   function statusLabel(s) {
     return ({ busy: 'Busy', tentative: 'Tentative', oof: 'Out of office', workingElsewhere: 'Working elsewhere', free: 'Free' })[s] || 'Busy';
+  }
+
+  // --- Demo availability (fictitious roster) ---
+  // Deterministic per-person busy/tentative/OOF blocks so the manager multi-calendar view is
+  // populated without real Outlook data. Returns the same shape as getSchedule (UTC ISO + status).
+  function hashCode(str) {
+    var h = 0;
+    for (var i = 0; i < str.length; i++) { h = (Math.imul(h, 31) + str.charCodeAt(i)) | 0; }
+    return Math.abs(h);
+  }
+  function seededRand(seed) {
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function pushMockItem(items, dayDate, sh, sm, durMin, status) {
+    var s = new Date(dayDate); s.setHours(sh, sm, 0, 0);
+    var e = new Date(s.getTime() + durMin * 60000);
+    items.push({ status: status, start: { dateTime: s.toISOString() }, end: { dateTime: e.toISOString() } });
+  }
+  function mockScheduleFor(email, rangeStart, rangeEnd) {
+    var rnd = seededRand(hashCode(email) + 7);
+    var density = 0.55 + rnd() * 0.35;                 // per-person busyness
+    // [hour, minute, durationMin, baseProbability]
+    var slots = [[8, 30, 30, 0.35], [9, 0, 15, 0.85], [9, 30, 60, 0.5], [11, 0, 60, 0.5],
+                 [13, 0, 30, 0.4], [14, 0, 60, 0.55], [15, 30, 45, 0.4], [16, 30, 30, 0.35]];
+    var items = [];
+    var d = new Date(rangeStart); d.setHours(0, 0, 0, 0);
+    var guard = 0;
+    while (d < rangeEnd && guard++ < 60) {
+      var dow = d.getDay();
+      if (dow >= 1 && dow <= 5) {
+        if (rnd() < 0.06) {
+          pushMockItem(items, d, 9, 0, 8 * 60, 'oof');   // out-of-office day
+        } else {
+          slots.forEach(function (sl) {
+            if (rnd() < sl[3] * density) {
+              var r = rnd(), st = 'busy';
+              if (r < 0.18) st = 'tentative';
+              else if (r < 0.24) st = 'workingElsewhere';
+              pushMockItem(items, d, sl[0], sl[1], sl[2], st);
+            }
+          });
+        }
+      }
+      d.setDate(d.getDate() + 1);
+    }
+    return { scheduleItems: items };
   }
 
   function trimDt(s) { return s ? s.replace(/\.\d+$/, '') : s; }

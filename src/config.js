@@ -23,6 +23,11 @@ window.OSA_CONFIG = {
   // Manager view: allow looking up a colleague's availability (free/busy via Graph getSchedule).
   allowViewOthers: true,
 
+  // Demo mode: synthesize each roster member's busy/tentative/OOF blocks instead of calling
+  // Graph getSchedule. Keeps the manager multi-calendar view populated for the fictitious
+  // sample users below. Set to false once teamMembers are real UPNs with live calendars.
+  demoAvailability: true,
+
   // Roster the manager can pick calendars from. Replace these with real user UPNs for live
   // availability — the sample names below are fictitious and drive the demo/preview.
   teamMembers: [
